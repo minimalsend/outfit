@@ -58,7 +58,7 @@ GITHUB_BASE_URL = "https://get-image-vert.vercel.app/get_image?id={id}"
 session = requests.Session()
 download_cache = {}
 def fetch_attversion():
-    url = "https://pt.textbin.net/raw/alrhw5dehl"  # Link com JSON simples
+    url = "https://raw.githubusercontent.com/minimalsend/release/refs/heads/main/version.json"  # Link com JSON simples
 
     try:
         response = requests.get(url)
