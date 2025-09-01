@@ -123,7 +123,8 @@ IMAGE_POSITIONS = {
     "SECOND_TOP": {"x":15,  "y":190, "w":80, "h":80},
     "BOTTOMS":    {"x":55,  "y":265, "w":85, "h":80},
     "SHOES":      {"x":110, "y":345, "w":70, "h":70},
-    "ARMS":       {"x":365, "y":265, "w":85, "h":55},
+    "ARMS":       {"x":365, "y":265, "w":90, "h":55},
+    "TRAN":       {"x":160, "y":130, "w":180, "h":180},
     "CHARACTER":  {"x":145, "y":130, "w":225, "h":325},
 }
 
@@ -143,6 +144,7 @@ FALLBACK_ITEMS = {
     "BOTTOMS": "204000000",
     "SHOES": "205000000",
     "ARMS": "212000000",
+    "TRAN": "914000001",
 }
 
 # Character definitions
@@ -587,6 +589,8 @@ def assign_outfits(clothes):
             outfits["SHOES"] = s
         elif prefix == "907" and outfits["ARMS"] is None:
             outfits["ARMS"] = s
+        elif prefix == "914" and outfits["TRAN"] is None:
+            outfits["TRAN"] = s
 
     return outfits
 
@@ -920,7 +924,7 @@ def outfit_image():
         return jsonify({'error': 'Invalid uid or region; failed to fetch player data'}), 400
     clothesv = data.get("profileInfo", {}).get("clothes", [])
     weaponSkin = data.get("basicInfo", {}).get("weaponSkinShows", [])
-    weaponSkin_filtered = [w for w in weaponSkin if str(w).startswith("907")]
+    weaponSkin_filtered = [w for w in weaponSkin if str(w).startswith(("907", "914"))]
     items = clothesv + weaponSkin_filtered
     clothes = list(map(str, items))  # garante que cada item é string
     avatar_id = data.get('profileInfo', {}).get('avatarId')
