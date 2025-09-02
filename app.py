@@ -303,7 +303,7 @@ characters = [
     "itemID": 102000004,  
     "name": "Primis",  
     "skill_id": 0,  
-    "png_image": "https://i.ibb.co/0VVSXDbW/Primis.png"
+    "png_image": "https://i.ibb.co/Vc6gxGhw/Picsart-25-04-28-20-04-10-910-1.png"
   },  
   {  
     "itemID": 102000005,  
