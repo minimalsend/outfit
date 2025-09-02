@@ -130,8 +130,8 @@ IMAGE_POSITIONS = {
 
 # Special avatar positions
 SPECIAL_CHARACTER_POSITIONS = {
-    "101000001": {"x":-50, "y":0, "w":775, "h":650},
-    "102000004": {"x":-50, "y":0, "w":775, "h":650},
+    "101000001": {"x":-50, "y":0, "w":200, "h":300},
+    "102000004": {"x":-50, "y":0, "w":200, "h":300},
 }
 
 # Fallback outfit IDs
