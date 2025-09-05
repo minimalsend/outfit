@@ -812,70 +812,21 @@ def parse_response(content: str) -> dict:
         if ":" in line
     )
 
-def GetAccountInformation(uid: str, unk: str, region: str, endpoint: str) -> dict:
-    """Get player account information."""
-    region = region.upper()
-    if region not in SUPPORTED_REGIONS:
-        raise ValueError(f"Unsupported region: {region}")
+import requests
 
+def GetAccountInformation(uid: str, region: str = "br") -> dict:
+    """
+    Faz um request simples para obter informações do jogador.
+    """
+    url = f"https://info-2-s20h.onrender.com/player-info?uid={uid}&region={region}"
+    
     try:
-        # Monta o payload protobuf
-        proto_message = main_pb2.GetPlayerPersonalShow()
-        json_format.ParseDict({'a': uid, 'b': unk}, proto_message)
-        payload = proto_message.SerializeToString()
+        response = requests.get(url, timeout=15)
+        response.raise_for_status()
+        return response.json()
+    except requests.exceptions.RequestException as e:
+        return {"error": f"Request failed: {str(e)}"}
 
-        # Encripta com AES CBC
-        data_enc = aes_cbc_encrypt(MAIN_KEY, MAIN_IV, payload)
-
-        # Pega o token JWT e limpa possíveis aspas
-        jwtlogin = get_single_response().strip().replace('"', '').replace("'", '')
-
-
-        print(f"[DEBUG] JWT usado: {jwtlogin}")
-        versionob = fetch_attversion()
-        headers = {
-            'X-Unity-Version': '2018.4.11f1',
-            'ReleaseVersion': f'{versionob}',
-            'Content-Type': 'application/octet-stream',
-            'X-GA': 'v1 1',
-            'Authorization': f'Bearer {jwtlogin}',
-            'User-Agent': 'Dalvik/2.1.0 (Linux; U; Android 7.1.2; ASUS_Z01QD Build/QKQ1.190825.002)',
-            'Host': 'clientbp.ggblueshark.com',
-            'Connection': 'Keep-Alive',
-            'Accept-Encoding': 'gzip'
-        }
-
-        url = "https://client.us.freefiremobile.com/GetPlayerPersonalShow"
-
-        with httpx.Client(timeout=TIMEOUT) as client:
-            try:
-                response = client.post(url, data=data_enc, headers=headers)
-                response.raise_for_status()
-
-                # Decodificar a resposta protobuf
-                decoded_message = AccountPersonalShow_pb2.AccountPersonalShowInfo()
-                decoded_message.ParseFromString(response.content)
-
-                # Converter para JSON legível
-                json_data = json.loads(json_format.MessageToJson(decoded_message))
-
-                return json_data
-
-            except httpx.HTTPStatusError as http_err:
-                print(f"[HTTP ERROR] Status: {http_err.response.status_code} - {http_err.response.text}")
-                raise ValueError(f"HTTP Error {http_err.response.status_code}: {http_err.response.text}")
-
-            except httpx.RequestError as req_err:
-                print(f"[REQUEST ERROR] Request to {req_err.request.url} failed: {str(req_err)}")
-                raise ValueError(f"Request error: {str(req_err)}")
-
-            except Exception as e:
-                print(f"[CLIENT ERROR] Unexpected error in HTTP client: {str(e)}")
-                raise ValueError(f"Client error: {str(e)}")
-
-    except Exception as e:
-        print(f"[GENERAL ERROR] {str(e)}")
-        raise ValueError(f"Failed to get account info: {str(e)}")
 
 
 def cached_endpoint(ttl=300):  
@@ -918,7 +869,7 @@ def outfit_image():
 
     
     try:
-        data = GetAccountInformation(uid, "7", region, "/GetPlayerPersonalShow")
+        data = GetAccountInformation(uid, "br")
     except Exception as e:
         logging.error("Fetch error: %s", e)
         return jsonify({'error': 'Invalid uid or region; failed to fetch player data'}), 400
