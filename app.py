@@ -50,7 +50,7 @@ cache = TTLCache(maxsize=100, ttl=300)
 cached_tokens = defaultdict(dict)
 
 # Constants
-BG_IMAGE_URL = "https://i.ibb.co/NdyDyhQT/Gemini-Generated-Image-61lm4761lm4761lm.png"
+BG_IMAGE_URL = "https://i.ibb.co/4wnhx8bf/fundo1.png"
 OVERLAY_LAYER_URL = "https://i.ibb.co/mVrbzkPp/Gemini-Generated-Image-pqx7fipqx7fipqx7-removebg-preview.png"
 GITHUB_BASE_URL = "https://get-image-vert.vercel.app/get_image?id={id}"
 
